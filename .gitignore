@@ -119,4 +119,4 @@ fabric.properties
 .nfs*
 
 # ignore the output directory of mvn -q exec:java
-output/
+/output
