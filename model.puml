@@ -10,10 +10,21 @@ class Actuator {
   + int pin
 }
 
-class State
+class State {
+ + transitions
+}
 
 class Action {
   + SIGNAL value
+}
+
+class Transition {
+  + contitions
+  + next
+}
+
+class Sensor {
+ + signal
 }
 
 enum SIGNAL {
@@ -27,8 +38,10 @@ NamedElement <|-- Actuator
 NamedElement <|-- State
 
 App *--> "1..*\nstates" State
+State *--> Transition
+Transition --> "Next" State
+Transition --> "Conditions" Sensor
 App *--> "1..*\nactuators" Actuator
-State --> "next" State
 State *--> "1..*\nactions" Action
 Action --> "1 target" Actuator
 
