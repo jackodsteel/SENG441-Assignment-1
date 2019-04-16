@@ -3,10 +3,8 @@ package io.github.mosser.arduinoml.ens.samples;
 import io.github.mosser.arduinoml.ens.generator.ToC;
 import io.github.mosser.arduinoml.ens.generator.Visitor;
 import io.github.mosser.arduinoml.ens.model.*;
+import io.github.mosser.arduinoml.ens.util.FileWriter;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Arrays;
 
 public class Led {
@@ -54,16 +52,7 @@ public class Led {
 		theSwitch.accept(codeGenerator);
 
 		// Writing C files
-        try {
-            System.out.println("Generating C code: ./output/fsm.h");
-            Files.write(Paths.get("./output/fsm.h"), codeGenerator.getHeaders().toString().getBytes());
-            System.out.println("Generating C code: ./output/main.c");
-            Files.write(Paths.get("./output/main.c"), codeGenerator.getCode().toString().getBytes());
-            System.out.println("Code generation: done");
-            System.out.println("Board upload : cd output && make upload && cd ..;");
-        } catch (IOException e) {
-            System.err.println(e);
-        }
+        FileWriter.outputCode(codeGenerator);
 	}
 
 }

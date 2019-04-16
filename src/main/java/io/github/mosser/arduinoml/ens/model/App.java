@@ -4,6 +4,7 @@ import io.github.mosser.arduinoml.ens.generator.Visitable;
 import io.github.mosser.arduinoml.ens.generator.Visitor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class App implements NamedElement, Visitable {
@@ -50,6 +51,14 @@ public class App implements NamedElement, Visitable {
 		this.states = states;
 	}
 
+    public void addState(State state) {
+        this.states.add(state);
+    }
+
+    public void addStates(State... states) {
+        Arrays.stream(states).forEach(this::addState);
+    }
+
 	public State getInitial() {
 		return initial;
 	}
@@ -64,6 +73,10 @@ public class App implements NamedElement, Visitable {
 
     public void addTransition(Transition transition) {
         transitions.add(transition);
+    }
+
+    public void addTransitions(Transition... transitions) {
+        Arrays.stream(transitions).forEach(this::addTransition);
     }
 
     public List<Sensor> getSensors() {
