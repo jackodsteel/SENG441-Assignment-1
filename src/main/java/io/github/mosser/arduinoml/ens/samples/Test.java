@@ -2,14 +2,7 @@ package io.github.mosser.arduinoml.ens.samples;
 
 import io.github.mosser.arduinoml.ens.generator.ToC;
 import io.github.mosser.arduinoml.ens.generator.Visitor;
-import io.github.mosser.arduinoml.ens.model.Action;
-import io.github.mosser.arduinoml.ens.model.Actuator;
-import io.github.mosser.arduinoml.ens.model.App;
-import io.github.mosser.arduinoml.ens.model.Condition;
-import io.github.mosser.arduinoml.ens.model.SIGNAL;
-import io.github.mosser.arduinoml.ens.model.Sensor;
-import io.github.mosser.arduinoml.ens.model.State;
-import io.github.mosser.arduinoml.ens.model.Transition;
+import io.github.mosser.arduinoml.ens.model.*;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -48,14 +41,19 @@ Test {
 
         // Binding transitions to states
         Sensor buttonSensor = new Sensor(10, "button");
-        Condition buttonPressed = new Condition(buttonSensor, SIGNAL.HIGH);
-        Condition buttonNotPressed = new Condition(buttonSensor, SIGNAL.LOW);
+        Condition buttonPressed = new SensorCondition(buttonSensor, SIGNAL.HIGH);
+        Condition buttonNotPressed = new SensorCondition(buttonSensor, SIGNAL.LOW);
+
+
+        Timer timer = new Timer("timer");
+        Condition oneSecond = new TimerCondition(timer, 1000);
 
 
         Transition onTrans = new Transition("onTrans", List.of(buttonPressed), off, freshlyOn);
         Transition offTrans = new Transition("offTrans", List.of(buttonPressed), on, freshlyOff);
         Transition buttonUpOnTrans = new Transition("buttonUpOnTrans", List.of(buttonNotPressed), freshlyOff, off);
         Transition buttonUpOffTrans = new Transition("buttonUpOffTrans", List.of(buttonNotPressed), freshlyOn, on);
+        Transition oneSecondOff = new Transition("oneSecondOff", List.of(oneSecond), on, freshlyOff);
 
         // Building the App
         App theSwitch = new App();
@@ -67,6 +65,8 @@ Test {
         theSwitch.addTransition(offTrans);
         theSwitch.addTransition(buttonUpOffTrans);
         theSwitch.addTransition(buttonUpOnTrans);
+        theSwitch.addTransition(oneSecondOff);
+        theSwitch.addTimer(timer);
         theSwitch.addSensor(buttonSensor);
 
         // Generating Code

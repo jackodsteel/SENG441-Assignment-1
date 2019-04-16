@@ -1,12 +1,6 @@
 package io.github.mosser.arduinoml.ens.generator;
 
-import io.github.mosser.arduinoml.ens.model.Action;
-import io.github.mosser.arduinoml.ens.model.Actuator;
-import io.github.mosser.arduinoml.ens.model.App;
-import io.github.mosser.arduinoml.ens.model.Condition;
-import io.github.mosser.arduinoml.ens.model.Sensor;
-import io.github.mosser.arduinoml.ens.model.State;
-import io.github.mosser.arduinoml.ens.model.Transition;
+import io.github.mosser.arduinoml.ens.model.*;
 
 public class ToC extends Visitor<StringBuffer> {
 
@@ -46,12 +40,20 @@ public class ToC extends Visitor<StringBuffer> {
 			state.accept(this);
 		}
 
+        for (Timer timer : app.getTimers()) {
+            c(String.format("  long %s = 0; // [Timer]", timer.getName()));
+        }
+
 		if (app.getInitial() != null) {
 			c("int main(void) {");
 			c("  setup();");
             c(String.format("  long curr_state = %s;", app.getInitial().getName().hashCode()));
 			c(String.format("  state_%s();", app.getInitial().getName()));
             c("  while(true) {");
+            c("  delay(1);");
+            for (Timer timer : app.getTimers()) {
+                timer.accept(this);
+            }
             for (Transition transition : app.getTransitions()) {
                 transition.accept(this);
             }
@@ -88,8 +90,18 @@ public class ToC extends Visitor<StringBuffer> {
     }
 
     @Override
-    public void visit(Condition condition) {
+    public void visit(Timer timer) {
+        c(String.format("  %s += 1;", timer.getName()));
+    }
+
+    @Override
+    public void visit(SensorCondition condition) {
         c(String.format("(digitalRead(%s) == %s)", condition.getSensor().getPin(), condition.getExpectedValue()));
+    }
+
+    @Override
+    public void visit(TimerCondition condition) {
+        c(String.format("(%s %% %s == 0)", condition.getTimer().getName(), condition.getTriggerValue()));
     }
 
     @Override

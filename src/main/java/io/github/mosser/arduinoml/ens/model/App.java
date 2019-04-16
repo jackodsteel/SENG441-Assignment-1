@@ -13,9 +13,18 @@ public class App implements NamedElement, Visitable {
     private List<State> states = new ArrayList<>();
     private List<Transition> transitions = new ArrayList<>();
     private List<Sensor> sensors = new ArrayList<>();
+    private List<Timer> timers = new ArrayList<>();
 	private State initial;
 
-	@Override
+    public List<Timer> getTimers() {
+        return timers;
+    }
+
+    public void addTimer(Timer timer) {
+        timers.add(timer);
+    }
+
+    @Override
 	public String getName() {
 		return name;
 	}
