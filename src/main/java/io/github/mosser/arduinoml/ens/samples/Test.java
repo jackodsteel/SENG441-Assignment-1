@@ -34,8 +34,8 @@ Test {
         switchTheLightOff.setValue(SIGNAL.LOW);
 
         // Binding actions to states
-        freshlyOn.setActions(Arrays.asList(switchTheLightOn));
-        freshlyOff.setActions(Arrays.asList(switchTheLightOff));
+        freshlyOn.addAction(switchTheLightOn);
+        freshlyOff.addAction(switchTheLightOff);
 
         // Binding transitions to states
         Sensor buttonSensor = new Sensor(10, "button");
