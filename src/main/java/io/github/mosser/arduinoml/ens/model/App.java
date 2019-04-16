@@ -12,6 +12,7 @@ public class App implements NamedElement, Visitable {
     private List<Actuator> actuators = new ArrayList<>();
     private List<State> states = new ArrayList<>();
     private List<Transition> transitions = new ArrayList<>();
+    private List<Sensor> sensors = new ArrayList<>();
 	private State initial;
 
 	@Override
@@ -54,6 +55,14 @@ public class App implements NamedElement, Visitable {
 
     public void addTransition(Transition transition) {
         transitions.add(transition);
+    }
+
+    public List<Sensor> getSensors() {
+        return sensors;
+    }
+
+    public void addSensor(Sensor sensor) {
+        sensors.add(sensor);
     }
 
 	@Override

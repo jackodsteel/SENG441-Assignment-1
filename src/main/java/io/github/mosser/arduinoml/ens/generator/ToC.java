@@ -1,6 +1,12 @@
 package io.github.mosser.arduinoml.ens.generator;
 
-import io.github.mosser.arduinoml.ens.model.*;
+import io.github.mosser.arduinoml.ens.model.Action;
+import io.github.mosser.arduinoml.ens.model.Actuator;
+import io.github.mosser.arduinoml.ens.model.App;
+import io.github.mosser.arduinoml.ens.model.Condition;
+import io.github.mosser.arduinoml.ens.model.Sensor;
+import io.github.mosser.arduinoml.ens.model.State;
+import io.github.mosser.arduinoml.ens.model.Transition;
 
 public class ToC extends Visitor<StringBuffer> {
 
@@ -30,6 +36,9 @@ public class ToC extends Visitor<StringBuffer> {
 		for(Actuator a: app.getActuators()){
 			a.accept(this);
 		}
+        for (Sensor s : app.getSensors()) {
+            s.accept(this);
+        }
 		c("}\n");
 
 		for(State state: app.getStates()){
@@ -40,7 +49,7 @@ public class ToC extends Visitor<StringBuffer> {
 		if (app.getInitial() != null) {
 			c("int main(void) {");
 			c("  setup();");
-            c(String.format("  int curr_state = %s;", app.getInitial().getName().hashCode()));
+            c(String.format("  long curr_state = %s;", app.getInitial().getName().hashCode()));
 			c(String.format("  state_%s();", app.getInitial().getName()));
             c("  while(true) {");
             for (Transition transition : app.getTransitions()) {
@@ -92,7 +101,7 @@ public class ToC extends Visitor<StringBuffer> {
             c(" && ");
         }
         c(" true) { ");
-        c(String.format("  int curr_state = %s;", transition.getNextState().getName().hashCode()));
+        c(String.format("  curr_state = %s;", transition.getNextState().getName().hashCode()));
         c(String.format("  state_%s();", transition.getNextState().getName()));
         c("  }\n}");
     }

@@ -2,7 +2,14 @@ package io.github.mosser.arduinoml.ens.samples;
 
 import io.github.mosser.arduinoml.ens.generator.ToC;
 import io.github.mosser.arduinoml.ens.generator.Visitor;
-import io.github.mosser.arduinoml.ens.model.*;
+import io.github.mosser.arduinoml.ens.model.Action;
+import io.github.mosser.arduinoml.ens.model.Actuator;
+import io.github.mosser.arduinoml.ens.model.App;
+import io.github.mosser.arduinoml.ens.model.Condition;
+import io.github.mosser.arduinoml.ens.model.SIGNAL;
+import io.github.mosser.arduinoml.ens.model.Sensor;
+import io.github.mosser.arduinoml.ens.model.State;
+import io.github.mosser.arduinoml.ens.model.Transition;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -10,7 +17,8 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
-public class Test {
+public class
+Test {
 
     public static void main(String[] args) {
 
@@ -22,6 +30,8 @@ public class Test {
         // Declaring states
         State on = new State("on");
         State off = new State("off");
+        State freshlyOn = new State("freshly_on");
+        State freshlyOff = new State("freshly_off");
 
         // Creating actions
         Action switchTheLightOn = new Action();
@@ -33,8 +43,8 @@ public class Test {
         switchTheLightOff.setValue(SIGNAL.LOW);
 
         // Binding actions to states
-        on.setActions(Arrays.asList(switchTheLightOn));
-        off.setActions(Arrays.asList(switchTheLightOff));
+        freshlyOn.setActions(Arrays.asList(switchTheLightOn));
+        freshlyOff.setActions(Arrays.asList(switchTheLightOff));
 
         // Binding transitions to states
         Sensor buttonSensor = new Sensor(10, "button");
@@ -42,17 +52,22 @@ public class Test {
         Condition buttonNotPressed = new Condition(buttonSensor, SIGNAL.LOW);
 
 
-        Transition onTrans = new Transition("onTrans", List.of(buttonPressed), off, on);
-        Transition offTrans = new Transition("offTrans", List.of(buttonNotPressed), on, off);
+        Transition onTrans = new Transition("onTrans", List.of(buttonPressed), off, freshlyOn);
+        Transition offTrans = new Transition("offTrans", List.of(buttonPressed), on, freshlyOff);
+        Transition buttonUpOnTrans = new Transition("buttonUpOnTrans", List.of(buttonNotPressed), freshlyOff, off);
+        Transition buttonUpOffTrans = new Transition("buttonUpOffTrans", List.of(buttonNotPressed), freshlyOn, on);
 
         // Building the App
         App theSwitch = new App();
         theSwitch.setName("Led!");
         theSwitch.setBricks(Arrays.asList(led));
-        theSwitch.setStates(Arrays.asList(on, off));
+        theSwitch.setStates(Arrays.asList(on, off, freshlyOff, freshlyOn));
         theSwitch.setInitial(on);
         theSwitch.addTransition(onTrans);
         theSwitch.addTransition(offTrans);
+        theSwitch.addTransition(buttonUpOffTrans);
+        theSwitch.addTransition(buttonUpOnTrans);
+        theSwitch.addSensor(buttonSensor);
 
         // Generating Code
         Visitor codeGenerator = new ToC();
