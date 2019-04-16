@@ -11,20 +11,25 @@ class Actuator {
 }
 
 class State {
- + transitions
 }
 
 class Action {
   + SIGNAL value
 }
 
-class Transition {
-  + contitions
-  + next
+class Sensor {
+  + int pin
 }
 
-class Sensor {
- + signal
+class Transition {
+  + List<Condition> conditions
+  + State currentState
+  + State nextState
+}
+
+class Condition {
+  + Sensor sensor
+  + SIGNAL value
 }
 
 enum SIGNAL {
@@ -36,12 +41,17 @@ enum SIGNAL {
 NamedElement <|-- App
 NamedElement <|-- Actuator
 NamedElement <|-- State
+NamedElement <|-- Sensor
+NamedElement <|-- Transition
+NamedElement <|-- Condition
 
 App *--> "1..*\nstates" State
-State *--> Transition
-Transition --> "Next" State
-Transition --> "Conditions" Sensor
 App *--> "1..*\nactuators" Actuator
+App *--> "1..*\nallTransitions" Transition
+Transition --> Condition
+Condition --> Sensor
+Transition --> "nextState" State
+Transition --> "currentState" State
 State *--> "1..*\nactions" Action
 Action --> "1 target" Actuator
 
