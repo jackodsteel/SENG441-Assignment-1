@@ -1,7 +1,8 @@
 package io.github.mosser.arduinoml.ens.samples;
 
+import io.github.mosser.arduinoml.ens.generator.ToC;
+import io.github.mosser.arduinoml.ens.generator.Visitor;
 import io.github.mosser.arduinoml.ens.model.*;
-import io.github.mosser.arduinoml.ens.generator.*;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -38,8 +39,8 @@ public class Led {
 		off.setActions(Arrays.asList(switchTheLightOff));
 
 		// Binding transitions to states
-		on.setNext(off);
-		off.setNext(on);
+//		on.setNext(off);
+//		off.setNext(on);
 
 		// Building the App
 		App theSwitch = new App();

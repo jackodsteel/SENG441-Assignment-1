@@ -9,6 +9,12 @@ public abstract class Visitor<T> {
 	public abstract void visit(Action action);
 	public abstract void visit(Actuator actuator);
 
+	public abstract void visit(Sensor sensor);
+
+	public abstract void visit(Condition condition);
+
+	public abstract void visit(Transition transition);
+
 	/***********************
 	 ** Helper mechanisms **
 	 ***********************/

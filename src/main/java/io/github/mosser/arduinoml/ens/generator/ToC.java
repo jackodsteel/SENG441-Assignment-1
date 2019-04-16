@@ -4,8 +4,6 @@ import io.github.mosser.arduinoml.ens.model.*;
 
 public class ToC extends Visitor<StringBuffer> {
 
-	private final static String CURRENT_STATE = "current_state";
-
 	public ToC() {
 		this.code = new StringBuffer();
 		this.headers = new StringBuffer();
@@ -42,7 +40,13 @@ public class ToC extends Visitor<StringBuffer> {
 		if (app.getInitial() != null) {
 			c("int main(void) {");
 			c("  setup();");
+            c(String.format("  int curr_state = %s;", app.getInitial().getName().hashCode()));
 			c(String.format("  state_%s();", app.getInitial().getName()));
+            c("  while(true) {");
+            for (Transition transition : app.getTransitions()) {
+                transition.accept(this);
+            }
+            c("  }");
 			c("  return 0;");
 			c("}");
 		}
@@ -60,8 +64,6 @@ public class ToC extends Visitor<StringBuffer> {
 		for(Action action: state.getActions()) {
 			action.accept(this);
 		}
-		c("  _delay_ms(1000);");
-		c(String.format("  state_%s();", state.getNext().getName()));
 		c("}");
 	}
 
@@ -70,5 +72,29 @@ public class ToC extends Visitor<StringBuffer> {
 	public void visit(Action action) {
 		c(String.format("  digitalWrite(%d,%s);",action.getActuator().getPin(),action.getValue()));
 	}
+
+    @Override
+    public void visit(Sensor sensor) {
+        c(String.format("  pinMode(%d, INPUT); // %s [Sensor]", sensor.getPin(), sensor.getName()));
+    }
+
+    @Override
+    public void visit(Condition condition) {
+        c(String.format("(digitalRead(%s) == %s)", condition.getSensor().getPin(), condition.getExpectedValue()));
+    }
+
+    @Override
+    public void visit(Transition transition) {
+        c(String.format("if (%s == curr_state) {", transition.getCurrentState().getName().hashCode()));
+        c("if ( ");
+        for (Condition condition : transition.getConditions()) {
+            condition.accept(this);
+            c(" && ");
+        }
+        c(" true) { ");
+        c(String.format("  int curr_state = %s;", transition.getNextState().getName().hashCode()));
+        c(String.format("  state_%s();", transition.getNextState().getName()));
+        c("  }\n}");
+    }
 
 }

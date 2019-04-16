@@ -1,6 +1,7 @@
 package io.github.mosser.arduinoml.ens.model;
 
-import io.github.mosser.arduinoml.ens.generator.*;
+import io.github.mosser.arduinoml.ens.generator.Visitable;
+import io.github.mosser.arduinoml.ens.generator.Visitor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,8 +9,9 @@ import java.util.List;
 public class App implements NamedElement, Visitable {
 
 	private String name;
-	private List<Actuator> actuators = new ArrayList<Actuator>();
-	private List<State> states = new ArrayList<State>();
+    private List<Actuator> actuators = new ArrayList<>();
+    private List<State> states = new ArrayList<>();
+    private List<Transition> transitions = new ArrayList<>();
 	private State initial;
 
 	@Override
@@ -45,6 +47,14 @@ public class App implements NamedElement, Visitable {
 	public void setInitial(State initial) {
 		this.initial = initial;
 	}
+
+    public List<Transition> getTransitions() {
+        return transitions;
+    }
+
+    public void addTransition(Transition transition) {
+        transitions.add(transition);
+    }
 
 	@Override
 	public void accept(Visitor visitor) {
