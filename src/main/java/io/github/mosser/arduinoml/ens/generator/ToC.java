@@ -60,7 +60,7 @@ public class ToC extends Visitor<StringBuffer> {
             c(String.format("  long curr_state = %s;", app.getInitial().getName().hashCode()));
 			c(String.format("  state_%s();", app.getInitial().getName()));
             c("  while(true) {");
-            c("  delay(1);");
+            c("  _delay_ms(1);");
             for (Timer timer : app.getTimers()) {
                 timer.accept(this);
             }
