@@ -15,7 +15,6 @@ import io.github.mosser.arduinoml.ens.model.TimerCondition;
 import io.github.mosser.arduinoml.ens.model.Transition;
 import io.github.mosser.arduinoml.ens.util.FileWriter;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class
@@ -66,7 +65,7 @@ Test {
         // Building the App
         App theSwitch = new App();
         theSwitch.setName("Led!");
-        theSwitch.setBricks(Arrays.asList(led));
+        theSwitch.addActuator(led);
         theSwitch.addStates(on, off, freshlyOff, freshlyOn);
         theSwitch.setInitial(on);
         theSwitch.addTransitions(onTrans, offTrans, buttonUpOffTrans, buttonUpOnTrans, oneSecondOff);

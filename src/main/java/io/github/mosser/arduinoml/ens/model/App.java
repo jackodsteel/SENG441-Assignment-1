@@ -18,7 +18,6 @@ public class App implements NamedElement, Visitable {
 	private State initial;
 
     public App() {
-
     }
 
     public App(String name) {
@@ -47,16 +46,16 @@ public class App implements NamedElement, Visitable {
 		return actuators;
 	}
 
-	public void setBricks(List<Actuator> actuators) {
-		this.actuators = actuators;
-	}
+    public void addActuator(Actuator actuator) {
+        actuators.add(actuator);
+    }
+
+    public void addActuators(Actuator... actuators) {
+        Arrays.stream(actuators).forEach(this::addActuator);
+    }
 
 	public List<State> getStates() {
 		return states;
-	}
-
-	public void setStates(List<State> states) {
-		this.states = states;
 	}
 
     public void addState(State state) {

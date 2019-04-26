@@ -115,7 +115,7 @@ public class Assignment {
         Transition resetToZero = new Transition("resetToZero", List.of(buttonNotPressed, oneSecond), reset, zero);
 
 
-        app.setBricks(List.of(led, firstSeg, secondSeg, thirdSeg, fourthSeg, fifthSeg, sixthSeg, seventhSeg, firstDigit));
+        app.addActuators(led, firstSeg, secondSeg, thirdSeg, fourthSeg, fifthSeg, sixthSeg, seventhSeg, firstDigit);
         app.addStates(reset, zero, one, two, three, four, five, six, seven, eight, nine);
         app.setInitial(zero);
         app.addTransitions(zeroToOne, oneToTwo, twoToThree, threeToFour, fourToFive, fiveToSix, sixToSeven, sevenToEight, eightToNine, nineToZero);
@@ -131,6 +131,5 @@ public class Assignment {
         // Writing C files
         FileWriter.outputCode(codeGenerator);
     }
-
 
 }

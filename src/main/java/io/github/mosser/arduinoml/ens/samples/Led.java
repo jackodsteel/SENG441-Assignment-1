@@ -2,10 +2,12 @@ package io.github.mosser.arduinoml.ens.samples;
 
 import io.github.mosser.arduinoml.ens.generator.ToC;
 import io.github.mosser.arduinoml.ens.generator.Visitor;
-import io.github.mosser.arduinoml.ens.model.*;
+import io.github.mosser.arduinoml.ens.model.Action;
+import io.github.mosser.arduinoml.ens.model.Actuator;
+import io.github.mosser.arduinoml.ens.model.App;
+import io.github.mosser.arduinoml.ens.model.SIGNAL;
+import io.github.mosser.arduinoml.ens.model.State;
 import io.github.mosser.arduinoml.ens.util.FileWriter;
-
-import java.util.Arrays;
 
 public class Led {
 
@@ -33,8 +35,8 @@ public class Led {
 		switchTheLightOff.setValue(SIGNAL.LOW);
 
 		// Binding actions to states
-		on.setActions(Arrays.asList(switchTheLightOn));
-		off.setActions(Arrays.asList(switchTheLightOff));
+		on.addAction(switchTheLightOn);
+		off.addAction(switchTheLightOff);
 
 		// Binding transitions to states
 //		on.setNext(off);
@@ -43,8 +45,8 @@ public class Led {
 		// Building the App
 		App theSwitch = new App();
 		theSwitch.setName("Led!");
-		theSwitch.setBricks(Arrays.asList(led));
-		theSwitch.setStates(Arrays.asList(on, off));
+		theSwitch.addActuator(led);
+		theSwitch.addStates(on, off);
 		theSwitch.setInitial(on);
 
 		// Generating Code
