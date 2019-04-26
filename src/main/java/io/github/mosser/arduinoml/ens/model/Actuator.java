@@ -16,6 +16,14 @@ public class Actuator implements NamedElement, Visitable {
         this.pin = pin;
     }
 
+    public Actuator() {
+    }
+
+    public Actuator(String name, int pin) {
+        this.name = name;
+        this.pin = pin;
+    }
+
     @Override
     public void accept(Visitor visitor) {
         visitor.visit(this);

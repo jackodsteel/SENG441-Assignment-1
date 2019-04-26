@@ -8,6 +8,13 @@ public class Action implements Visitable {
 	private SIGNAL value;
 	private Actuator actuator;
 
+    public Action() {
+    }
+
+    public Action(Actuator actuator, SIGNAL value) {
+        this.actuator = actuator;
+        this.value = value;
+    }
 
 	public SIGNAL getValue() {
 		return value;

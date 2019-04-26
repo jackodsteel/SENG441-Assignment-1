@@ -1,6 +1,15 @@
 package io.github.mosser.arduinoml.ens.generator;
 
-import io.github.mosser.arduinoml.ens.model.*;
+import io.github.mosser.arduinoml.ens.model.Action;
+import io.github.mosser.arduinoml.ens.model.Actuator;
+import io.github.mosser.arduinoml.ens.model.App;
+import io.github.mosser.arduinoml.ens.model.Condition;
+import io.github.mosser.arduinoml.ens.model.Sensor;
+import io.github.mosser.arduinoml.ens.model.SensorCondition;
+import io.github.mosser.arduinoml.ens.model.State;
+import io.github.mosser.arduinoml.ens.model.Timer;
+import io.github.mosser.arduinoml.ens.model.TimerCondition;
+import io.github.mosser.arduinoml.ens.model.Transition;
 
 public class ToC extends Visitor<StringBuffer> {
 
@@ -41,10 +50,11 @@ public class ToC extends Visitor<StringBuffer> {
 		}
 
         for (Timer timer : app.getTimers()) {
-            c(String.format("  long %s = 0; // [Timer]", timer.getName()));
+            c(String.format("long %s = 0; // [Timer]", timer.getName()));
         }
 
 		if (app.getInitial() != null) {
+            c("");
 			c("int main(void) {");
 			c("  setup();");
             c(String.format("  long curr_state = %s;", app.getInitial().getName().hashCode()));
@@ -96,26 +106,27 @@ public class ToC extends Visitor<StringBuffer> {
 
     @Override
     public void visit(SensorCondition condition) {
-        c(String.format("(digitalRead(%s) == %s)", condition.getSensor().getPin(), condition.getExpectedValue()));
+        c(String.format("        (digitalRead(%s) == %s)", condition.getSensor().getPin(), condition.getExpectedValue()));
     }
 
     @Override
     public void visit(TimerCondition condition) {
-        c(String.format("(%s %% %s == 0)", condition.getTimer().getName(), condition.getTriggerValue()));
+        c(String.format("        (%s %% %s == 0)", condition.getTimer().getName(), condition.getTriggerValue()));
     }
 
     @Override
     public void visit(Transition transition) {
-        c(String.format("if (%s == curr_state) {", transition.getCurrentState().getName().hashCode()));
-        c("if ( ");
+        c(String.format("    if (%s == curr_state) {", transition.getInitialState().getName().hashCode()));
+        c("      if ( ");
         for (Condition condition : transition.getConditions()) {
             condition.accept(this);
-            c(" && ");
+            c("        && ");
         }
-        c(" true) { ");
-        c(String.format("  curr_state = %s;", transition.getNextState().getName().hashCode()));
-        c(String.format("  state_%s();", transition.getNextState().getName()));
-        c("  }\n}");
+        c("        true) { ");
+        c(String.format("          curr_state = %s;", transition.getNextState().getName().hashCode()));
+        c(String.format("          state_%s();", transition.getNextState().getName()));
+        c("          continue;");
+        c("      }\n    }");
     }
 
 }

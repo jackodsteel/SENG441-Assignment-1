@@ -12,9 +12,9 @@ public class Sensor implements Visitable, NamedElement {
         this.name = name;
     }
 
-    public Sensor(int pin, String name) {
-        this.pin = pin;
+    public Sensor(String name, int pin) {
         this.name = name;
+        this.pin = pin;
     }
 
     @Override

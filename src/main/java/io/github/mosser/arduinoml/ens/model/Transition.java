@@ -10,7 +10,7 @@ public class Transition implements Visitable, NamedElement {
 
     private String name;
     private List<Condition> conditions;
-    private State currentState;
+    private State initialState;
     private State nextState;
 
     public Transition(String name) {
@@ -18,10 +18,17 @@ public class Transition implements Visitable, NamedElement {
         this.conditions = new ArrayList<>();
     }
 
-    public Transition(String name, List<Condition> conditions, State currentState, State nextState) {
+    public Transition(String name, List<Condition> conditions, State initialState, State nextState) {
         this.name = name;
         this.conditions = conditions;
-        this.currentState = currentState;
+        this.initialState = initialState;
+        this.nextState = nextState;
+    }
+
+    public Transition(String name, Condition condition, State initialState, State nextState) {
+        this.name = name;
+        this.conditions = List.of(condition);
+        this.initialState = initialState;
         this.nextState = nextState;
     }
 
@@ -47,12 +54,12 @@ public class Transition implements Visitable, NamedElement {
         this.conditions.add(condition);
     }
 
-    public State getCurrentState() {
-        return currentState;
+    public State getInitialState() {
+        return initialState;
     }
 
-    public void setCurrentState(State currentState) {
-        this.currentState = currentState;
+    public void setInitialState(State initialState) {
+        this.initialState = initialState;
     }
 
     public State getNextState() {

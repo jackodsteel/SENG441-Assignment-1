@@ -2,7 +2,17 @@ package io.github.mosser.arduinoml.ens.samples;
 
 import io.github.mosser.arduinoml.ens.generator.ToC;
 import io.github.mosser.arduinoml.ens.generator.Visitor;
-import io.github.mosser.arduinoml.ens.model.*;
+import io.github.mosser.arduinoml.ens.model.Action;
+import io.github.mosser.arduinoml.ens.model.Actuator;
+import io.github.mosser.arduinoml.ens.model.App;
+import io.github.mosser.arduinoml.ens.model.Condition;
+import io.github.mosser.arduinoml.ens.model.SIGNAL;
+import io.github.mosser.arduinoml.ens.model.Sensor;
+import io.github.mosser.arduinoml.ens.model.SensorCondition;
+import io.github.mosser.arduinoml.ens.model.State;
+import io.github.mosser.arduinoml.ens.model.Timer;
+import io.github.mosser.arduinoml.ens.model.TimerCondition;
+import io.github.mosser.arduinoml.ens.model.Transition;
 import io.github.mosser.arduinoml.ens.util.FileWriter;
 
 import java.util.Arrays;
@@ -38,7 +48,7 @@ Test {
         freshlyOff.addAction(switchTheLightOff);
 
         // Binding transitions to states
-        Sensor buttonSensor = new Sensor(10, "button");
+        Sensor buttonSensor = new Sensor("button", 10);
         Condition buttonPressed = new SensorCondition(buttonSensor, SIGNAL.HIGH);
         Condition buttonNotPressed = new SensorCondition(buttonSensor, SIGNAL.LOW);
 

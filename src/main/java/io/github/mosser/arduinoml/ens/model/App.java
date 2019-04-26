@@ -17,6 +17,14 @@ public class App implements NamedElement, Visitable {
     private List<Timer> timers = new ArrayList<>();
 	private State initial;
 
+    public App() {
+
+    }
+
+    public App(String name) {
+        this.name = name;
+    }
+
     public List<Timer> getTimers() {
         return timers;
     }

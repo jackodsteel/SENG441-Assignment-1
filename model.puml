@@ -23,7 +23,7 @@ class Sensor {
 
 class Transition {
   + List<Condition> conditions
-  + State currentState
+  + State initialState
   + State nextState
 }
 
@@ -51,7 +51,7 @@ App *--> "1..*\nallTransitions" Transition
 Transition --> Condition
 Condition --> Sensor
 Transition --> "nextState" State
-Transition --> "currentState" State
+Transition --> "initialState" State
 State *--> "1..*\nactions" Action
 Action --> "1 target" Actuator
 
